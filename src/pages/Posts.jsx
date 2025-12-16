@@ -1,15 +1,16 @@
 import {useState, useEffect} from 'react';
 import API from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import {  Navigate  ,useNavigate } from 'react-router-dom';
 
 
 const Posts = () => {
-
+    
     const navigate = useNavigate()
     const [posts, setPosts] = useState([]);
-
+    const token = localStorage.getItem('token')
     const fetchPosts = async () => {
         try {
+            
             const res = await API.get('/getPosts')
             if(res.status !== 200) throw new Error('Failed to fetch posts')
             if(res.data.length === 0) alert('No posts found')
@@ -19,11 +20,17 @@ const Posts = () => {
             console.error(err)
         }
     }
-    
     useEffect(() => {
     fetchPosts()
 }, [navigate])
 
+    if(!token){
+        return <Navigate to="/login" replace />;
+    }
+
+
+    
+    
   return (
     <div>
         <h1>Posts</h1>
